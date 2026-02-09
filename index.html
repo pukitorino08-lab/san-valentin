@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Nuestro San Valentín 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:'Playfair Display',serif;
+  background:linear-gradient(#ffd6e5,#ffeef5);
+  overflow-x:hidden;
+  text-align:center;
+}
+
+h1{margin-top:20px;color:#c2185b}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+
+/* corazones */
+.heart{
+  position:fixed;
+  top:-10px;
+  color:rgba(255,105,180,.7);
+  animation:fall linear infinite;
+}
+@keyframes fall{
+  to{transform:translateY(110vh);}
+}
+
+/* sobre */
+.envelope{
+  background:#fff;
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,.15);
+  margin-bottom:30px;
+}
+
+#message{
+  font-family:'Great Vibes',cursive;
+  font-size:34px;
+  min-height:80px;
+  margin-top:15px;
+}
+
+/* botones */
+button,select,input{
+  background:#ff6fa1;
+  border:none;
+  color:white;
+  padding:10px 16px;
+  border-radius:20px;
+  margin:5px;
+  cursor:pointer;
+}
+button:hover{background:#ff4f8b}
+
+/* galería */
+.gallery{
+  border:12px solid pink;
+  border-radius:25px;
+  padding:10px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.gallery img{
+  width:150px;
+  height:150px;
+  object-fit:cover;
+  border-radius:15px;
+}
+
+/* contador */
+#countdown{font-size:22px;margin:15px}
+
+/* sellos */
+.seal{font-size:32px;cursor:pointer}
+
+/* mapa */
+iframe{
+  width:100%;
+  height:300px;
+  border:none;
+  border-radius:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>💘 Feliz San Valentín 💘</h1>
+
+<!-- música -->
+<audio id="music" loop>
+<source src="https://cdn.pixabay.com/audio/2022/03/15/audio_1f1e9d16b5.mp3">
+</audio>
+<button onclick="toggleMusic()">🎻 Música</button>
+
+<!-- sobre -->
+<div class="envelope">
+<textarea id="inputMessage" rows="3" placeholder="Escribí tu mensaje romántico..."></textarea><br>
+<button onclick="openEnvelope()">💌 Abrir sobre</button>
+<div id="message"></div>
+
+<p>Sellos de cera</p>
+<span class="seal" onclick="seal('❤️')">❤️</span>
+<span class="seal" onclick="seal('🌹')">🌹</span>
+<span class="seal" onclick="seal('💖')">💖</span>
+<div id="sealDisplay"></div>
+</div>
+
+<!-- poema -->
+<button onclick="generatePoem()">🔐 Poema secreto</button>
+<p id="poem"></p>
+
+<!-- galería -->
+<h2>📸 Nuestros recuerdos</h2>
+<input type="file" multiple accept="image/*" onchange="loadImages(event)">
+<div class="gallery" id="gallery"></div>
+
+<!-- cuenta -->
+<h2>⏳ Cuenta regresiva</h2>
+<input type="date" id="specialDate">
+<div id="countdown"></div>
+
+<!-- mapa -->
+<h2>📍 Lugares importantes</h2>
+<iframe src="https://www.google.com/maps?q=Buenos+Aires&output=embed"></iframe>
+
+</div>
+
+<script>
+// corazones
+setInterval(()=>{
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerHTML="❤";
+  h.style.left=Math.random()*100+"vw";
+  h.style.animationDuration=(3+Math.random()*5)+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),8000);
+},300);
+
+// sobre
+function openEnvelope(){
+  const text=inputMessage.value;
+  let i=0;
+  message.innerHTML="";
+  const w=setInterval(()=>{
+    message.innerHTML+=text[i];
+    i++;
+    if(i>=text.length)clearInterval(w);
+  },80);
+}
+
+// música
+function toggleMusic(){
+  music.paused?music.play():music.pause();
+}
+
+// galería
+function loadImages(e){
+  for(let f of e.target.files){
+    const img=document.createElement("img");
+    img.src=URL.createObjectURL(f);
+    gallery.appendChild(img);
+  }
+}
+
+// poema
+function generatePoem(){
+  const poems=[
+    "Amarte es mi casualidad favorita.",
+    "Tu amor es mi lugar seguro.",
+    "Elegirte todos los días es mi mayor fortuna."
+  ];
+  poem.innerText=poems[Math.floor(Math.random()*poems.length)];
+}
+
+// contador
+setInterval(()=>{
+  const d=new Date(specialDate.value);
+  if(!d)return;
+  const diff=d-new Date();
+  if(diff<=0)return;
+  countdown.innerText="Faltan "+Math.floor(diff/86400000)+" días 💕";
+},1000);
+
+// sellos
+function seal(icon){
+  sealDisplay.innerHTML="Sobre sellado con "+icon;
+}
+</script>
+
+</body>
+</html>
